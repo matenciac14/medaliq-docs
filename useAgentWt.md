@@ -3,7 +3,7 @@
 ## Setup inicial (solo una vez)
 
 ```bash
-cd /Users/miguelatencia/Desktop/MEDALIQ
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ
 ls -la wt.sh
 ./wt.sh list
 ```
@@ -14,11 +14,11 @@ ls -la wt.sh
 
 ```bash
 # Crear el worktree
-cd /Users/miguelatencia/Desktop/MEDALIQ
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ
 ./wt.sh new <nombre>
 
 # Ir al worktree
-cd /Users/miguelatencia/Desktop/MEDALIQ/medaliq-<nombre>
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ/medaliq-<nombre>
 # pnpm install se corre automáticamente en wt.sh new — no es necesario hacerlo manualmente
 
 # Editar el scope antes de arrancar Claude
@@ -60,7 +60,7 @@ git push origin <tipo>/<nombre>   # PR va a develop, nunca a main
 ## Al terminar la sesión (sin terminar la feature)
 
 ```bash
-cd /Users/miguelatencia/Desktop/MEDALIQ
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ
 ./wt.sh done <nombre>
 # guarda el contexto en contexts/<nombre>.md y elimina el directorio
 ```
@@ -70,13 +70,13 @@ cd /Users/miguelatencia/Desktop/MEDALIQ
 ## Retomar la feature otro día
 
 ```bash
-cd /Users/miguelatencia/Desktop/MEDALIQ
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ
 ./wt.sh new <nombre>              # si era feature (default)
 ./wt.sh new <nombre> bugfix       # si era bugfix — MISMO tipo que en la sesión original
 ./wt.sh new <nombre> hotfix       # si era hotfix
 # detecta contexts/<nombre>.md y lo carga automáticamente
 
-cd /Users/miguelatencia/Desktop/MEDALIQ/medaliq-<nombre>
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ/medaliq-<nombre>
 claude
 ```
 
@@ -98,7 +98,7 @@ claude
 
 `MEDALIQ-MOBILE` es un repo separado — **no entra en el worktree**. Los cambios mobile se hacen directamente en:
 ```
-/Users/miguelatencia/Desktop/MEDALIQ/MEDALIQ-MOBILE/
+/Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ/MEDALIQ-MOBILE/
 ```
 
 Si dos features requieren cambios mobile en paralelo, coordinar manualmente — no hay aislamiento de worktree para mobile. En la práctica, los cambios mobile de features distintas raramente colisionan porque cada screen vive en su propio archivo.
@@ -109,11 +109,11 @@ Si dos features requieren cambios mobile en paralelo, coordinar manualmente — 
 
 ```bash
 # Tab 1 de Warp
-cd /Users/miguelatencia/Desktop/MEDALIQ && ./wt.sh new <feature-a>
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ && ./wt.sh new <feature-a>
 cd medaliq-<feature-a> && claude
 
 # Tab 2 de Warp
-cd /Users/miguelatencia/Desktop/MEDALIQ && ./wt.sh new <feature-b>
+cd /Users/miguelatencia/Desktop/FACTORY_AI_SOFTWARE/MEDALIQ && ./wt.sh new <feature-b>
 cd medaliq-<feature-b> && claude
 ```
 
