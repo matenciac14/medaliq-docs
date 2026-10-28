@@ -1,0 +1,18 @@
+# Repos de código — tienen su propio git, no incluir aquí
+MEDALIQ-PROJECT/
+MEDALIQ-MOBILE/
+
+# OS
+.DS_Store
+
+# Archivos sensibles
+*.env
+*.env.*
+*.pem
+
+# HTML reports
+*.html
+
+# Claude Code — solo ignorar settings locales
+.claude/settings*.json
+.claude/settings/

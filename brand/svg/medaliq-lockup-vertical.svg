@@ -1,0 +1,9 @@
+<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="360" height="300" viewBox="0 0 360 300" fill="none">
+  <g transform="translate(120 20)">
+    <rect width="120" height="120" rx="24" fill="#1e3a5f"></rect>
+    <polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#ea580c"></polygon>
+    <polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#f7f6f4"></polygon>
+  </g>
+  <text x="180" y="204" text-anchor="middle" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800" font-size="52" letter-spacing="-1.5" fill="#1e3a5f">Medal<tspan fill="#c2410c">IQ</tspan></text>
+  <text x="180" y="232" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="3" fill="#6d7b8c">ENTRENA CON DATOS</text>
+</svg>

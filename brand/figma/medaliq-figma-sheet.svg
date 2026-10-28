@@ -1,0 +1,51 @@
+<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="880" height="480" viewBox="0 0 880 480" fill="none">
+  <rect width="880" height="480" fill="#fdfcfa"></rect>
+  <text x="40" y="52" font-family="Menlo, monospace" font-size="12" letter-spacing="2" fill="#1e3a5f">MEDALIQ · SIMBOLO 1B · v1</text>
+  <g transform="translate(40 80)">
+    <rect width="120" height="120" rx="26" fill="#1e3a5f"></rect>
+    <polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#ea580c"></polygon>
+    <polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#f7f6f4"></polygon>
+  </g>
+  <text x="40" y="222" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">APP ICON</text>
+  <g transform="translate(200 80)">
+    <rect width="120" height="120" fill="#1e3a5f"></rect>
+    <polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#ea580c"></polygon>
+    <polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#f7f6f4"></polygon>
+  </g>
+  <text x="200" y="222" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">CUADRADO</text>
+  <g transform="translate(360 80)">
+    <rect width="120" height="120" fill="#1e3a5f"></rect>
+    <g transform="translate(60 60) scale(0.66) translate(-60 -60)"><polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#ea580c"></polygon><polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#f7f6f4"></polygon></g>
+  </g>
+  <text x="360" y="222" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">MASKABLE</text>
+  <g transform="translate(520 80)">
+    <polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#ea580c"></polygon>
+    <polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#1e3a5f"></polygon>
+  </g>
+  <text x="520" y="222" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">SIMBOLO</text>
+  <g transform="translate(680 80)">
+    <polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#101c2b" opacity="0.55"></polygon>
+    <polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#101c2b"></polygon>
+  </g>
+  <text x="680" y="222" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">1 TINTA</text>
+  <g transform="translate(40 280)">
+    <rect width="120" height="120" rx="18" fill="#1e3a5f"></rect>
+    <polygon points="60,22 96,58 76,58 60,42 44,58 24,58" fill="#ea580c"></polygon>
+    <polygon points="60,58 96,94 76,94 60,78 44,94 24,94" fill="#f7f6f4"></polygon>
+  </g>
+  <text x="40" y="422" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">FAVICON</text>
+  <g transform="translate(200 280)">
+    <rect width="120" height="120" fill="#1e3a5f"></rect>
+    <polygon points="60,26 92,58 74,58 60,44 46,58 28,58" fill="#f7f6f4" opacity="0.6"></polygon>
+    <polygon points="60,58 92,90 74,90 60,76 46,90 28,90" fill="#f7f6f4"></polygon>
+  </g>
+  <text x="200" y="422" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#8a94a1">BLANCO</text>
+  <g transform="translate(360 280)">
+    <rect width="480" height="120" rx="6" fill="#f2efe9"></rect>
+    <text x="384" y="34" font-family="Menlo, monospace" font-size="11" letter-spacing="1.4" fill="#6d7b8c">PALETA</text>
+    <rect x="24" y="24" width="96" height="56" fill="#1e3a5f"></rect><text x="24" y="98" font-family="Menlo, monospace" font-size="10" fill="#6d7b8c">1E3A5F</text>
+    <rect x="132" y="24" width="96" height="56" fill="#ea580c"></rect><text x="132" y="98" font-family="Menlo, monospace" font-size="10" fill="#6d7b8c">EA580C</text>
+    <rect x="240" y="24" width="96" height="56" fill="#c2410c"></rect><text x="240" y="98" font-family="Menlo, monospace" font-size="10" fill="#6d7b8c">C2410C</text>
+    <rect x="348" y="24" width="96" height="56" fill="#f7f6f4" stroke="#d9d5cd"></rect><text x="348" y="98" font-family="Menlo, monospace" font-size="10" fill="#6d7b8c">F7F6F4</text>
+  </g>
+</svg>
