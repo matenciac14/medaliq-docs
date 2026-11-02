@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, coach]
+---
+
 # Domain: Coach
 # Reglas de negocio no evidentes en el código. Leer antes de tocar cualquier feature de coach.
 > **Flujos por actor → `flujos-por-actor.md`** — qué puede hacer el coach en cada módulo, con endpoints completos y restricciones de tier.
-> Spec de implementacion: `../specs/coach_athletes.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[coach_athletes.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |

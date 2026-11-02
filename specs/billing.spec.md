@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, pagos]
+---
+
 # BILLING — Spec del modulo de billing
 
 <!-- mirror: false -->
@@ -5,7 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-09-29.
 > Archivos fuente: `src/domain/billing/`, `src/domain/subscription/tier_features.ts`, `src/infrastructure/billing/`, `src/app/api/billing/`, `src/app/api/cron/billing-*`, `src/lib/config/user_config.ts`
-> Domain doc: `../domains/pagos.md`
+> Domain doc: [[pagos]]
 
 ## TL;DR
 - 5 endpoints (checkout coach/athlete, billing status, stub simulate, cron billing-check)

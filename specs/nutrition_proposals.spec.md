@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, nutricion]
+---
+
 # NUTRITION PROPOSALS & TODAY — Coach Proposals, Unified Mobile Endpoint
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Split de nutrition.spec.md. Propuestas del coach + endpoint unificado mobile.
 > Specs relacionadas: `nutrition_tracking.spec.md`, `nutrition_plans.spec.md`, `nutrition_templates.spec.md`
-> Domain doc: `../domains/nutricion.md`
+> Domain doc: [[nutricion]]
 
 ## TL;DR
 - 7 endpoints (4 web incl deprecated adjust, 3 mobile + /today)

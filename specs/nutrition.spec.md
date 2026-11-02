@@ -1,7 +1,11 @@
+---
+tags: [medaliq, spec, nutricion]
+---
+
 # NUTRITION — Indice de specs de nutricion
 
 > **ARCHIVO INDICE** — no contiene contratos. Lee el sub-spec relevante a tu tarea.
-> Domain doc: `../domains/nutricion.md`
+> Domain doc: [[nutricion]]
 
 ## Sub-specs (lee SOLO el que necesites)
 

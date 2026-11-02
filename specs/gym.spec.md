@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, entrenamiento]
+---
+
 # Spec: Modulo Gym (Ejercicios)
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Extraido del codigo fuente. Fuente canonica de contratos, logica de negocio, trampas y paridad web/mobile.
 > Leer antes de tocar cualquier endpoint de `/api/athlete/gym/`, `/api/mobile/gym/`, `/api/exercises/`, `/api/mobile/exercises/`, `/api/admin/exercises/`, `/api/coach/gym/exercises/`.
-> Domain doc complementario: `entrenamiento.md`
+> Domain doc: [[entrenamiento]]
 > **Scope:** Esta spec cubre endpoints de atleta y mobile. Coach gym routes → ver `coach_gym.spec.md`.
 
 ## TL;DR

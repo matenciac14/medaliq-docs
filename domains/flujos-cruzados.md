@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, flujos]
+---
+
 # Domain: Flujos Cruzados
 # Flujos que tocan múltiples módulos simultáneamente.
 # Verificado contra el código fuente — no inferido de documentación.
-> **Flujos por actor → `flujos-por-actor.md`** — qué puede hacer cada actor por módulo. Este archivo cubre los flujos que cruzan varios módulos.
+> **Flujos por actor → [[flujos-por-actor]]** — qué puede hacer cada actor por módulo. Este archivo cubre los flujos que cruzan varios módulos.
 
 ## Flujo 1 — Check-in → ajuste de plan + nutrición
 

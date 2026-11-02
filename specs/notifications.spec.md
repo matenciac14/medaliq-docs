@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plataforma]
+---
+
 # NOTIFICATIONS — Notificaciones in-app y push
 
 <!-- mirror: true -->
@@ -7,6 +11,7 @@
 > Spec extraida del codigo real. Ultima actualizacion: 2026-10-02.
 > Archivos fuente: `src/app/api/mobile/push-token/`, `src/app/api/mobile/notifications/`, `src/app/api/athlete/notifications/`, `src/lib/push/expo_push.ts`, `src/infrastructure/db/notification.ts`
 > Specs relacionadas: `cron.spec.md`, `messages.spec.md`
+> Domain doc: [[plataforma]]
 
 ## TL;DR
 

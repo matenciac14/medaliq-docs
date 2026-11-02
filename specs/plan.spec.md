@@ -1,7 +1,11 @@
+---
+tags: [medaliq, spec, plan]
+---
+
 # PLAN — Indice de specs de plan, sesiones, check-in y dashboard
 
 > **ARCHIVO INDICE** — no contiene contratos. Lee el sub-spec relevante a tu tarea.
-> Domain doc: `../domains/plan.md`
+> Domain doc: [[plan]]
 
 ## Sub-specs (lee SOLO el que necesites)
 

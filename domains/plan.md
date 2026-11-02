@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, plan]
+---
+
 # Domain: Plan de Entrenamiento + Check-in
 # Reglas de negocio no evidentes en el codigo. Leer antes de tocar planes, check-in o calendario.
 > **Flujos por actor -> `flujos-por-actor.md`** -- que puede hacer cada actor (atleta Free/Pro/B2B, coach) en planes y check-in, con endpoints.
-> Spec de implementacion: `../specs/plan.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[plan.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |

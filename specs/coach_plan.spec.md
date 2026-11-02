@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plan, entrenamiento, coach]
+---
+
 # COACH_PLAN — Gestion de planes de entrenamiento (coach)
 
 <!-- mirror: false -->
@@ -6,6 +10,7 @@
 > Spec extraida del codigo real. Ultima actualizacion: 2026-10-02.
 > Fuente canonica: esta spec refleja el comportamiento ACTUAL del codigo, no el deseado.
 > Specs relacionadas: `coach_athletes.spec.md`, `coach_gym.spec.md`, `plan.spec.md`, `gym.spec.md`
+> Domain doc: [[plan]] · [[entrenamiento]] · [[coach]]
 
 ---
 

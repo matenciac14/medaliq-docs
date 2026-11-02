@@ -1,6 +1,10 @@
+---
+tags: [medaliq, domain, seguridad]
+---
+
 # Domain: Seguridad
 # Reglas de seguridad de la plataforma. Leer antes de tocar auth, endpoints, DB o mobile.
-> Spec de implementacion: `../specs/auth.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[auth.spec]] — contratos, endpoints, trampas.
 
 ## Principio base — multi-tenant estricto
 
@@ -182,7 +186,7 @@ Rutas públicas: `/`, `/login`, `/register`, `/set-password`, `/forgot-password`
 | Vulnerabilidad | Protección | Estado |
 |---------------|------------|--------|
 | **SQL Injection** | Prisma ORM — queries parametrizadas, nunca concatenación de strings | ✅ Activo |
-| **XSS** | React escapa output por defecto. No usar `dangerouslySetInnerHTML`. CSP headers pendiente | ⚠️ Parcial |
+| **XSS** | React escapa output por defecto. `json_ld.tsx` escapa `<` con `\\u003c` (fix 2026-10-30). CSP headers en `next.config.ts` (fix 2026-10-30) | ✅ Activo |
 | **CSRF** | Auth.js maneja CSRF token automáticamente en forms web. Mobile usa Bearer token (inmune a CSRF) | ✅ Activo |
 | **Broken Auth** | Rate limiting en login/register/forgot-password. JWT firmado con secret. Cookies HttpOnly+Secure+SameSite | ✅ Activo |
 | **IDOR** | Ownership validation por actor en cada endpoint — nunca confiar en IDs del body | ✅ Activo |
@@ -244,5 +248,7 @@ Reglas aplicadas en 8 rondas de auditoria con ~100 fixes:
 | ~~`User.status` enum~~ | ~~Admin no puede bloquear usuarios~~ | ✅ Resuelto — enum `UserStatus` implementado (migración 20260709000001). Middleware enforcement de login-block por status pendiente (PLT-01). |
 | ~~Refresh token para mobile JWT~~ | ~~Atleta con JWT expirado en momento crítico queda sin acceso~~ | ✅ Resuelto — `POST /api/mobile/auth/refresh` + `refreshUser()` en store + listener de notificación `features_updated` en `_layout.tsx` |
 | Auditoría de acciones admin (quién cambió qué) | Sin trazabilidad de cambios manuales del admin | P2 |
-| CSP headers (Content Security Policy) | XSS en caso de inyección de scripts | P2 |
+| ~~CSP headers (Content Security Policy)~~ | ~~XSS en caso de inyección de scripts~~ | ✅ Implementado `next.config.ts` (2026-10-30) |
 | Rotación de `NEXTAUTH_SECRET` sin logout masivo | Secret comprometido → no hay mecanismo de invalidación | P3 |
+| Strava webhook POST sin firma de origen | Limitación del API de Strava — no firma sus POST. Mitigado por `findByProviderAccountId` (el evento se ignora si no hay WearableConnection). Sin solución limpia salvo IP allowlist. | P3 |
+| ~~Webhook genérico `/api/webhooks/payment` abierto en producción~~ | ~~Stub gateway (default cuando PAYMENT_GATEWAY no está configurado) no verifica firma — cualquiera podía hacer upgrade a cualquier usuario~~ | ✅ Fix 2026-10-30: bloqueado con 404 en producción cuando gateway='stub' |

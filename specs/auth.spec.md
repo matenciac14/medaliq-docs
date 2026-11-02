@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, seguridad]
+---
+
 # AUTH — Autenticacion y sesion
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-10-01.
 > Archivos fuente: `src/auth.ts`, `src/middleware.ts`, `src/lib/auth/mobile_auth.ts`, `src/app/api/auth/`, `src/app/api/mobile/auth/`
-> Domain doc: `../domains/seguridad.md`
+> Domain doc: [[seguridad]]
 
 ## TL;DR
 - 8 endpoints (5 web, 3 mobile)

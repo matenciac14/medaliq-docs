@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, traps]
+---
+
 # Trampas transversales — LEE ESTO ANTES DE TOCAR CUALQUIER MODULO
 
 > Estas son decisiones de implementacion que NO son obvias y que la AI rompe sistematicamente.

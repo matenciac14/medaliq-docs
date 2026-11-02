@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plan]
+---
+
 # PLAN SESSIONS — Calendar, Sessions, Log, History
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Split de plan.spec.md. Sesiones, calendario, logs de entrenamiento.
 > Specs relacionadas: `plan_checkin.spec.md`, `plan_dashboard.spec.md`
-> Domain doc: `../domains/plan.md`
+> Domain doc: [[plan]]
 
 ## TL;DR
 - 19 endpoints (10 web incl log/run/routine/week-print, 9 mobile incl history y delete)

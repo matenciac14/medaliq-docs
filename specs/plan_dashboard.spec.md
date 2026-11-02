@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plan, atleta]
+---
+
 # PLAN DASHBOARD — Mobile Dashboard, Week Sessions
 
 <!-- mirror: false -->
@@ -5,7 +9,7 @@
 
 > Split de plan.spec.md. Endpoints de dashboard mobile.
 > Specs relacionadas: `plan_checkin.spec.md`, `plan_sessions.spec.md`, `dashboard.spec.md`
-> Domain doc: `../domains/plan.md`
+> Domain doc: [[plan]] · [[atleta]]
 
 ## TL;DR
 - 2 endpoints (solo mobile)

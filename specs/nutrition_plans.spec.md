@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, nutricion]
+---
+
 # NUTRITION PLANS — Planned Meals, Targets, B2B, Food Profile, Init/Generate
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Split de nutrition.spec.md. Planificacion y targets nutricionales.
 > Specs relacionadas: `nutrition_tracking.spec.md`, `nutrition_templates.spec.md`, `nutrition_proposals.spec.md`
-> Domain doc: `../domains/nutricion.md`
+> Domain doc: [[nutricion]]
 
 ## TL;DR
 - 16 endpoints (10 web, 6 mobile + assigned-plan exclusivo)

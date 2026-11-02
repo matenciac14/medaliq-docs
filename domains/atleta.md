@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, atleta]
+---
+
 # Domain: Atleta
 # Reglas de negocio no evidentes en el código. Leer antes de tocar cualquier feature de atleta.
 > **Flujos por actor → `flujos-por-actor.md`** — qué puede hacer el atleta en cada módulo, con endpoints y restricciones de tier por actor (Free / Pro / B2B).
-> Spec de implementacion: `../specs/onboarding.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[onboarding.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |

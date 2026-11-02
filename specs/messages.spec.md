@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, coach, atleta]
+---
+
 # MESSAGES — Spec de mensajeria coach-atleta
 
 <!-- mirror: true -->
@@ -5,6 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-09-29.
 > Archivos fuente: `src/app/api/messages/`, `src/app/api/mobile/messages/`
+> Domain doc: [[coach]] · [[atleta]]
 
 ## TL;DR
 - 6 endpoints (3 web, 3 mobile)
