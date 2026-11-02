@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plataforma]
+---
+
 # CRON — Spec de cron jobs (notificaciones, billing, cleanup)
 
 <!-- mirror: false -->
@@ -5,7 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-10-07.
 > 10 crons DESACTIVADOS en `vercel.json` para ahorrar Neon compute. Código 100% listo.
-> Domain doc: `../domains/plataforma.md`
+> Domain doc: [[plataforma]]
 > Activar: copiar bloque `crons` de la sección "Para reactivar" a `vercel.json`.
 
 ## TL;DR
@@ -230,6 +234,6 @@ Agregar a `vercel.json`:
 
 | Fecha | Cambio | Referencia |
 |-------|--------|-----------|
-| 2026-10-07 | Reactivación: 10 crons activos en vercel.json. billing-check exporta GET+POST. Spec actualizada. |
+| 2026-10-07 | billing-check exporta GET+POST (compatible Vercel cron). Crons temporalmente activados y luego desactivados para ahorrar Neon compute. Estado final: DESACTIVADOS. |
 | 2026-10-05 | Fix: TL;DR corregido de 5 a 10 crons, eliminados plan-lifecycle y strava-sync inexistentes |
 | 2026-09-29 | Spec creada | Extraida del codigo por agentes SDD |

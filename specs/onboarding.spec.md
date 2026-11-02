@@ -1,10 +1,14 @@
+---
+tags: [medaliq, spec, atleta]
+---
+
 # ONBOARDING — Configuracion inicial del atleta
 
 <!-- mirror: true -->
 <!-- mirror-endpoints: POST /api/athlete/onboarding/generate ↔ POST /api/mobile/onboarding/generate -->
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-09-29.
-> Domain doc: `../domains/atleta.md`
+> Domain doc: [[atleta]]
 > Archivos fuente:
 > - `src/app/api/athlete/onboarding/generate/route.ts`
 > - `src/app/api/athlete/onboarding/prefilled/route.ts`

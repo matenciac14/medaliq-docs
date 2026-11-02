@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plataforma]
+---
+
 # ADMIN — Panel de operacion y gestion de la plataforma
 
 <!-- mirror: false -->
@@ -5,7 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-10-02.
 > Archivos fuente: `src/app/api/admin/`, `src/app/admin/`, `src/domain/admin/`, `src/lib/admin/`
-> Domain doc: `../domains/plataforma.md`
+> Domain doc: [[plataforma]]
 
 ## TL;DR
 - 16 endpoints API (todos web, auth via `auth()` + role ADMIN verificado en DB)

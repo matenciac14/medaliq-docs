@@ -1,5 +1,11 @@
+---
+tags: [medaliq, domain, integraciones]
+---
+
 # Domain: Integraciones con Wearables y Plataformas Deportivas
 # Leer antes de tocar cualquier integración externa, sync de datos o importación de actividades.
+> Spec de implementacion: [[wearables.spec]]
+> Domain relacionado: [[wearables]]
 
 ## Disponibilidad
 | Canal | Estado |

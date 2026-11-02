@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, plataforma]
+---
+
 # Domain: Plataforma (Admin + Landing + Marketplace + Notificaciones)
 # Reglas de negocio no evidentes en el código. Leer antes de tocar admin, landing, marketplace o notificaciones.
 > **Flujos por actor → `flujos-por-actor.md`** — qué puede hacer el admin en cada módulo, con endpoints completos.
-> Spec de implementacion: `../specs/cron.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[cron.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |
@@ -25,7 +29,7 @@ El admin es el panel de operación de Miguel como founder. Tiene dos capas:
 | Cambiar rol de cualquier usuario | Ver datos médicos privados del atleta |
 | Cambiar tier de suscripción (coach y atleta) | Actuar como coach sobre un atleta |
 | Bloquear, suspender, reactivar usuarios | Modificar FoodLog o SessionLog |
-| Eliminar usuario (soft delete con doble confirmación) | — |
+| Eliminar usuario (hard delete — cascade — con doble confirmación en UI) | — |
 | Cambiar coach asignado a un atleta | — |
 | Ver perfil completo de cualquier atleta o coach | — |
 
@@ -36,7 +40,7 @@ El admin es el panel de operación de Miguel como founder. Tiene dos capas:
 | `ACTIVE` | Normal, acceso completo | ✅ |
 | `SUSPENDED` | Suspensión temporal (ej. pago pendiente) — reversible | ❌ |
 | `BLOCKED` | Bloqueado por admin (incumplimiento de términos) — requiere acción manual para reactivar | ❌ |
-| `DELETED` | Soft delete — datos anonimizados, cuenta cerrada. Solo por solicitud del usuario o admin. | ❌ |
+| `DELETED` | Enum existe en schema pero el endpoint admin usa hard delete (`prisma.user.delete` + cascade). El status DELETED está reservado para soft delete futuro (solicitud GDPR). | ❌ |
 
 **Nota técnica:** `User.status UserStatus` implementado en schema (migración 20260709000001). Enum: ACTIVE | SUSPENDED | BLOCKED | DELETED. El middleware de auth aún no bloquea login por status — enforcement pendiente (PLT-01).
 
@@ -178,7 +182,9 @@ Recordatorios de alta prioridad que email no logra. Pendiente activación Meta L
 - **Frecuencia máxima de email:** 1/día por usuario — nunca más de uno diario
 - **WhatsApp:** solo eventos de alta prioridad — nunca marketing
 
-### Crons activos en Vercel
+### Crons — código listo, DESACTIVADOS en vercel.json
+
+> **DESACTIVADOS** para ahorrar Neon compute. El código está 100% listo. Activar copiando el bloque de `cron.spec.md → "Para reactivar"` a `vercel.json` cuando haya usuarios reales.
 
 | Endpoint | Schedule | Qué hace |
 |----------|----------|----------|

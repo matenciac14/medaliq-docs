@@ -1,5 +1,9 @@
+---
+tags: [medaliq, spec, wearables, integraciones]
+---
+
 # Spec: Wearables y Sincronizacion de Salud
-# Domain doc: ../domains/wearables.md
+# Domain doc: [[wearables]] · [[integraciones]]
 # Leer _traps.spec.md SIEMPRE antes de modificar codigo.
 
 ## TL;DR

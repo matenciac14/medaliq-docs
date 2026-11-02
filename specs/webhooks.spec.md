@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, pagos]
+---
+
 # WEBHOOKS — Spec de webhooks de pago y Strava
 
 <!-- mirror: false -->
@@ -5,7 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-09-29.
 > Archivos fuente: `src/app/api/webhooks/wompi/route.ts`, `payment/route.ts`, `strava/route.ts`, `mercadopago/route.ts`
-> Domain doc: `../domains/pagos.md`
+> Domain doc: [[pagos]]
 
 ## TL;DR
 - 4 endpoints (Wompi, payment generico, Strava, MercadoPago stub)

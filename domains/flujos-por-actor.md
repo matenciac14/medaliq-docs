@@ -1,9 +1,13 @@
+---
+tags: [medaliq, domain, flujos]
+---
+
 # Flujos por Actor
 # Qué puede hacer cada actor, en qué módulo, con qué endpoint y bajo qué restricción.
 # [roadmap] = no implementado · [parcial] = implementado con gaps conocidos · sin marca = implementado
 # Para reglas de negocio profundas → leer el domain doc del módulo correspondiente.
 
-**Domain docs:** `atleta.md` · `coach.md` · `nutricion.md` · `entrenamiento.md` · `plan.md` · `pagos.md` · `plataforma.md` · `flujos-cruzados.md`
+**Domain docs:** [[atleta]] · [[coach]] · [[nutricion]] · [[entrenamiento]] · [[plan]] · [[pagos]] · [[plataforma]] · [[flujos-cruzados]]
 
 > **Nota para agentes:** los endpoints listados en este archivo están documentados desde el contexto de los CLAUDE.md y domain docs — no verificados línea a línea contra el código. Antes de usar un endpoint, confirmar que existe con `Glob` en `src/app/api/` o `MEDALIQ-MOBILE/src/api/`. Los marcadores `[roadmap]` y `[parcial]` indican que el endpoint puede no existir aún.
 
@@ -173,6 +177,7 @@ Acceso exclusivo `role = 'ADMIN'`. Ver reglas en `plataforma.md`.
 |--------|----------|-------------|
 | Ver / cambiar rol / cambiar tier | `GET/PATCH /api/admin/users[/id]` | Cambio de tier manual hasta conectar Wompi |
 | [roadmap PLT-01] Bloquear usuario | `PATCH /api/admin/users/[id]` `{ status: 'BLOCKED' }` | Bloquea acceso a la app — conserva todos los datos. No elimina cuenta |
+| Eliminar usuario (hard delete) | `DELETE /api/admin/users/[id]` | Cascade elimina CoachAthlete, TrainingPlan, CheckIns, etc. Audit log pre-delete. Guard: no puede eliminarse a sí mismo |
 | Cambiar coach asignado a atleta | `PATCH /api/admin/users/[id]` | Único actor que puede hacerlo |
 
 ### Biblioteca de alimentos
@@ -190,22 +195,25 @@ Acceso exclusivo `role = 'ADMIN'`. Ver reglas en `plataforma.md`.
 | Gestionar roadmap | `/admin/roadmap` | Fuente canónica: `src/app/admin/roadmap/roadmap_data.ts` |
 
 ### Automatizaciones (cron jobs)
+
+> **DESACTIVADOS** en `vercel.json` para ahorrar Neon compute. Código listo. Activar cuando haya usuarios reales — ver `cron.spec.md → "Para reactivar"`.
+
 | Cron | Schedule | Qué hace |
 |------|----------|---------|
-| `session-reminder` | diario | Recuerda a atletas con sesión pendiente hoy |
-| `checkin-reminder` | semanal | Recuerda a atletas que no hicieron check-in esta semana |
-| `payment-overdue` | diario | Notifica pagos vencidos coach→atleta |
-| `pending-athlete-reminder` | diario | Recuerda a coaches atletas que no completaron onboarding |
-| `expire-suggestions` | diario | Expira `CheckInSuggestion` viejas |
-| `billing-check` | diario | Verifica estado de suscripciones (grace period=3 días, downgrade si vence) |
-| `billing-renewal-reminder` | diario 1pm UTC | Envía email con nuevo link de pago Wompi a suscripciones que vencen en 7 días |
-| `inactive-athlete-reminder` | diario | Alerta coaches con atletas inactivos (sin actividad 7+ días) |
-| `streak-risk` | diario | Avisa a atletas en riesgo de perder su racha |
-| `nutrition-alert` | diario 09:00 | Alerta coaches: atleta con 3 días seguidos de adherencia <60% |
+| `session-reminder` | Lun 12:00 UTC | Recuerda a atletas con sesión pendiente hoy |
+| `checkin-reminder` | Dom 23:00 UTC | Recuerda a atletas que no hicieron check-in esta semana |
+| `payment-overdue` | Diario 14:00 UTC | Notifica pagos vencidos coach→atleta |
+| `pending-athlete-reminder` | Diario 12:00 UTC | Recuerda a coaches atletas que no completaron onboarding |
+| `expire-suggestions` | Sin schedule definido | Expira `CheckInSuggestion` viejas |
+| `billing-check` | Diario 02:00 UTC | Verifica estado de suscripciones (grace period=3 días, downgrade si vence) |
+| `billing-renewal-reminder` | Diario 13:00 UTC | Envía email con nuevo link de pago Wompi a suscripciones que vencen en 7 días |
+| `inactive-athlete-reminder` | Diario 14:00 UTC | Alerta al **atleta** (push + email re-engagement) si lleva 3+ días sin actividad |
+| `streak-risk` | Diario 20:00 UTC | Avisa al atleta si su racha está en riesgo (no entrenó hoy) |
+| `nutrition-alert` | Diario 09:00 UTC | Alerta al coach: atleta con 3 días seguidos de adherencia nutricional <60% |
 
-Todos los crons están en `src/app/api/cron/*/route.ts`. Autenticados con header secret — no son invocables públicamente.
+Todos los crons están en `src/app/api/cron/*/route.ts`. Autenticados con `Authorization: Bearer $CRON_SECRET` — no son invocables públicamente.
 
-**Nota**: los crons son el motor de retención del sistema. Refinar horarios, frecuencias y contenido de cada notificación cuando la funcionalidad core esté confirmada — post-lanzamiento.
+**Nota**: los crons son el motor de retención del sistema. Refinar horarios, frecuencias y contenido cuando la funcionalidad core esté confirmada — post-lanzamiento.
 
 ---
 

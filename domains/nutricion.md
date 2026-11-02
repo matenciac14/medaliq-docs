@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, nutricion]
+---
+
 # Domain: Nutrición
 # Reglas de negocio no evidentes en el código. Leer antes de tocar cualquier feature de nutrición.
 > **Flujos por actor → `flujos-por-actor.md`** — qué puede hacer cada actor (atleta Free/Pro/B2B, coach, admin) en este módulo, con endpoints.
-> Spec de implementacion: `../specs/nutrition.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[nutrition.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |

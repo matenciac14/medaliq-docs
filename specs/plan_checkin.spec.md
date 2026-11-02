@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, plan]
+---
+
 # PLAN CHECK-IN — Check-In Semanal, Sugerencias, processCheckIn
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Split de plan.spec.md. Check-in semanal y sugerencias.
 > Specs relacionadas: `plan_sessions.spec.md`, `plan_dashboard.spec.md`
-> Domain doc: `../domains/plan.md`
+> Domain doc: [[plan]]
 
 ## TL;DR
 - 9 endpoints (4 web, 5 mobile incl checkin-status)

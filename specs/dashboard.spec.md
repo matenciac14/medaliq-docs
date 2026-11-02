@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, atleta, entrenamiento, nutricion]
+---
+
 # DASHBOARD — Dashboard del Atleta (Web + Mobile)
 
 <!-- mirror: true -->
@@ -12,6 +16,7 @@
 > - `src/app/(athlete)/dashboard/_lib/get_dashboard_data.ts` — orquestador web (RSC)
 > - `src/app/api/mobile/dashboard/route.ts` — endpoint mobile
 > - `src/app/api/mobile/dashboard/week-sessions/route.ts` — calendario semanal mobile
+> Domain doc: [[atleta]] · [[entrenamiento]] · [[nutricion]]
 
 ## TL;DR
 - 2 endpoints mobile + 1 orquestador web (RSC)

@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, nutricion]
+---
+
 # NUTRITION TRACKING — Food Log, Foods, Water, Barcode
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Split de nutrition.spec.md. Solo tracking diario.
 > Specs relacionadas: `nutrition_plans.spec.md`, `nutrition_templates.spec.md`, `nutrition_proposals.spec.md`
-> Domain doc: `../domains/nutricion.md`
+> Domain doc: [[nutricion]]
 
 ## TL;DR
 - 16 endpoints (9 web, 7 mobile + barcode exclusivo)

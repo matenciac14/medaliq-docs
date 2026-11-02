@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, nutricion]
+---
+
 # NUTRITION TEMPLATES — Swap, Grocery, MealTemplates, NutritionTemplates
 
 <!-- mirror: true -->
@@ -5,7 +9,7 @@
 
 > Split de nutrition.spec.md. Templates y herramientas de planificacion.
 > Specs relacionadas: `nutrition_tracking.spec.md`, `nutrition_plans.spec.md`, `nutrition_proposals.spec.md`
-> Domain doc: `../domains/nutricion.md`
+> Domain doc: [[nutricion]]
 
 ## TL;DR
 - 16 endpoints (8 web, 8 mobile + swap exclusivo mobile)

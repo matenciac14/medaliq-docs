@@ -1,8 +1,12 @@
+---
+tags: [medaliq, domain, pagos]
+---
+
 # Domain: Pagos y Suscripciones
 
 > Reglas de negocio y guía técnica completa de billing. Leer antes de tocar cualquier archivo en `src/domain/billing/`, `src/infrastructure/billing/`, o `src/app/api/billing/`.
 > Flujos por actor → `flujos-por-actor.md`
-> Specs de implementacion: `../specs/billing.spec.md` · `../specs/webhooks.spec.md` — contratos, endpoints, trampas.
+> Specs de implementacion: [[billing.spec]] · [[webhooks.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |

@@ -1,5 +1,11 @@
+---
+tags: [medaliq, domain, wearables]
+---
+
 # Domain: Wearables y Sincronizacion de Salud
 # Leer antes de tocar cualquier integracion con wearables, sync de datos de salud, HealthKit, Health Connect, Strava o Garmin.
+> Spec de implementacion: [[wearables.spec]]
+> Domain relacionado: [[integraciones]]
 
 ## Disponibilidad
 | Canal | Estado |

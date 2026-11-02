@@ -1,7 +1,11 @@
+---
+tags: [medaliq, domain, entrenamiento]
+---
+
 # Domain: Entrenamiento
 # Reglas de negocio no evidentes en el codigo. Leer antes de tocar cualquier feature de entrenamiento.
 > **Flujos por actor -> `flujos-por-actor.md`** -- que puede hacer cada actor (atleta, coach, admin) en este modulo, con endpoints.
-> Spec de implementacion: `../specs/gym.spec.md` — contratos, endpoints, trampas.
+> Spec de implementacion: [[gym.spec]] — contratos, endpoints, trampas.
 
 ## Disponibilidad
 | Canal | Estado |

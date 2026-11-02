@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, entrenamiento, coach]
+---
+
 # COACH-GYM — Coach Gym Module
 
 <!-- mirror: false -->
@@ -7,6 +11,7 @@
 > Spec extraida del codigo real. Ultima actualizacion: 2026-10-02.
 > Fuente canonica: esta spec refleja el comportamiento ACTUAL del codigo, no el deseado.
 > Specs relacionadas: `gym.spec.md` (atleta), `coach_athletes.spec.md` (ownership), `_traps.spec.md`
+> Domain doc: [[entrenamiento]] · [[coach]]
 
 ## TL;DR
 

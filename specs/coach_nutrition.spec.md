@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, nutricion, coach]
+---
+
 # COACH-NUT — Coach Nutrition
 
 <!-- mirror: false -->
@@ -6,6 +10,7 @@
 > Spec extraida de los requisitos de diseno. Ultima actualizacion: 2026-10-02.
 > Fuente canonica: esta spec refleja el comportamiento ESPERADO del codigo (spec de implementacion).
 > Specs relacionadas: `nutrition.spec.md`, `plan.spec.md`, `coach_athletes.spec.md`
+> Domain doc: [[nutricion]] · [[coach]]
 
 ## TL;DR
 

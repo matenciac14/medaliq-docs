@@ -1,3 +1,7 @@
+---
+tags: [medaliq, spec, coach]
+---
+
 # COACH-01 — Coach: Gestion de Atletas, Invite/Join, Planes, Pagos, Perfil
 
 <!-- mirror: false -->
@@ -5,7 +9,7 @@
 
 > Spec extraida del codigo real. Ultima actualizacion: 2026-09-29.
 > Cubre: status transitions · feature toggling · invite/join flow · plan assignment · payments · coach profile.
-> Domain doc: `../domains/coach.md`
+> Domain doc: [[coach]]
 > Panel del coach es web-only — no hay par mobile para estos endpoints.
 > **Fuera de scope:** Coach gym routes (`/api/coach/gym/*`), coach nutrition templates (`/api/coach/nutrition/*`), plan editing (`/api/coach/plan/*`), posts (`/api/coach/posts`), programs (`/api/coach/programs`), running-logs, benchmarks, celebrate-pr, sessions, dailylogs — existen en el codebase pero no estan documentados en esta spec.
 
