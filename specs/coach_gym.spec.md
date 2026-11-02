@@ -29,7 +29,7 @@ tags: [medaliq, spec, entrenamiento, coach]
 
 - [ ] `supersetWith` en DB es el **ID de WorkoutExercise** (cuid), NO el `exerciseId` del catalogo de ejercicios
 - [ ] `supersetWithOrder` en el body del request es el **order numerico del ejercicio par** — se usa para resolver el ID en tx, no se persiste directamente
-- [ ] `dayOfWeek` es **0-6 (convencion JS)** — diferente al dominio 1-7 que usan otros modulos
+- [ ] `dayOfWeek` es **1-7 (1=Lunes, 7=Domingo)** — igual que el resto del dominio. Zod valida `min(1).max(7)`. Schema DB: `// 1=Lunes … 7=Domingo`
 - [ ] **POST /assign desactiva TODAS las asignaciones activas del atleta**, sin importar a que template pertenecen; DELETE /assign solo desactiva las del template especifico en el path
 - [ ] **PATCH es replace total**: borra todos los `WorkoutDay` (cascade a `WorkoutExercise`) y los recrea. Todos los `WorkoutExercise.id` cambian. `SetLog.workoutExerciseId` queda null (onDelete: SetNull)
 - [ ] Ejercicios accesibles = globales (`coachId IS NULL`) + propios del coach (`coachId = session.coachId`)
@@ -96,7 +96,7 @@ WorkoutTemplate[] // con WorkoutDay[] y WorkoutExercise[] incluidos
   level?: string          // max 100
   daysPerWeek: number     // int, 1-7
   days: {                 // min 1
-    dayOfWeek: number     // int, 0-6
+    dayOfWeek: number     // int, 1-7 (1=Lunes, 7=Domingo)
     label: string         // max 100
     muscleGroups: string[] // array de strings, max 50 chars cada uno
     isRestDay: boolean
@@ -229,7 +229,8 @@ WorkoutTemplate // con WorkoutDay[] — SIN join de Exercise en WorkoutExercise
 3. Dentro del `$transaction`:
    - `updateMany({ where: { athleteId, isActive: true }, data: { isActive: false } })` — desactiva TODAS las asignaciones activas del atleta, de cualquier template
    - Crear nueva `AssignedWorkout` con `isActive: true`
-4. Enviar notificacion al atleta (fire-and-forget, fuera del tx)
+   - Si `weeksDuration > 0`, calcula `endDate = startDate + weeksDuration * 7 dias`
+4. Enviar notificacion al atleta tipo `PLAN_ACTUALIZADO` (fire-and-forget, fuera del tx)
 
 ---
 
@@ -513,7 +514,7 @@ model WorkoutTemplate {
 model WorkoutDay {
   id           String            @id @default(cuid())
   templateId   String
-  dayOfWeek    Int               // 0-6 (convencion JS — no 1-7)
+  dayOfWeek    Int               // 1-7 (1=Lunes, 7=Domingo)
   label        String            // max 100 — nombre del dia (e.g. "Push", "Pierna")
   muscleGroups String[]          // array de strings, max 50 chars cada uno
   isRestDay    Boolean           @default(false)
@@ -591,7 +592,7 @@ enum SetType {
 |--------|-----------|-----------------|
 | `supersetWith` en DB | FK a `Exercise.id` (exerciseId del catalogo) | ID de `WorkoutExercise` — el ejercicio dentro del dia del template (cuid) |
 | `supersetWithOrder` en body | campo que mapea directo a DB | order numerico del ejercicio par en el mismo dia — se usa para resolver el ID en tx, no se persiste |
-| `dayOfWeek` valores | 1-7 como otros modulos del dominio | 0-6 (convencion JS) — 0 = domingo, 6 = sabado |
+| `dayOfWeek` valores | 0-6 como JS nativo | 1-7 (1=Lunes, 7=Domingo) — igual que el resto del dominio. Zod: `min(1).max(7)`. NOTA: `from-template` en coach_plan convierte base-0 a base-1 con `+1` |
 | POST /assign vs DELETE /assign | ambos operan igual, solo cambia el template scope | POST desactiva TODAS las rutinas activas del atleta; DELETE solo desactiva las del template en el path `[id]` |
 | GET /exercises/[id] ownership | verifica `coachId` como todos los demas endpoints | ownership check: solo globales o propios del coach — 404 para custom de otros |
 | PATCH/DELETE exercises globales | Parece que el coach puede editar cualquier ejercicio | Retorna **403** para ejercicios globales (`coachId: null`) — solo puede modificar/eliminar custom propios |
