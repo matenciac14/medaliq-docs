@@ -16,7 +16,7 @@ tags: [medaliq, spec, plataforma]
 - 10 cron jobs (código listo, desactivados en vercel.json para ahorrar Neon compute)
 - Auth: `Authorization: Bearer CRON_SECRET`
 - Jobs: billing-check, billing-renewal-reminder, checkin-reminder, expire-suggestions, inactive-athlete-reminder, nutrition-alert, payment-overdue, pending-athlete-reminder, session-reminder, streak-risk
-- Trampas criticas: billing-check usa POST no GET, todos desactivados en vercel.json
+- Trampas criticas: billing-check usa GET+POST, todos desactivados en vercel.json
 - Mirror mobile: N/A
 
 ---
@@ -27,7 +27,7 @@ tags: [medaliq, spec, plataforma]
 - [ ] Schedules documentados en sección "Para reactivar" — copiar a `vercel.json`
 - [ ] Auth: todos usan `Authorization: Bearer CRON_SECRET` header
 - [x] `billing-check` exporta GET + POST — compatible con Vercel cron (GET) y admin trigger (POST)
-- [ ] `expire-suggestions` no tiene schedule definido en ningun lugar
+- [x] `expire-suggestions` schedule: Diario 03:00 UTC (definido en bloque "Para reactivar")
 - [ ] `inactive-athlete-reminder` no tiene cooldown — puede notificar al mismo atleta cada dia
 - [ ] `payment-overdue` escribe `PaymentAuditLog` con fire-and-forget — errores silenciados
 
@@ -43,8 +43,8 @@ tags: [medaliq, spec, plataforma]
 | `checkin-reminder` | Dom 23:00 | GET | Atletas con plan sin checkin esta semana | Email + Push | No |
 | `payment-overdue` | Diario 14:00 | GET | Coaches con pagos vencidos | Email | Si (AuditLog) |
 | `billing-renewal-reminder` | Diario 13:00 | GET | Subs Wompi expiran en 7 dias | Email + Wompi link | No |
-| `expire-suggestions` | Sin schedule | GET | CheckInSuggestion PENDING expiradas | — | Si (status→EXPIRED) |
-| `billing-check` | Diario 02:00 | POST | Subs expiradas + 3d gracia | — | Si (downgrade tier) |
+| `expire-suggestions` | Diario 03:00 | GET | CheckInSuggestion PENDING expiradas | — | Si (status→EXPIRED) |
+| `billing-check` | Diario 02:00 | GET+POST | Subs expiradas + 3d gracia | — | Si (downgrade tier) |
 | `pending-athlete-reminder` | Diario 12:00 | GET | Coaches con atletas sin activar >= 48h | Email + Push | No |
 | `nutrition-alert` | Diario 09:00 | GET | Coaches con atletas < 60% kcal 3 dias | Push | No |
 
@@ -141,7 +141,7 @@ tags: [medaliq, spec, plataforma]
 
 ---
 
-### expire-suggestions — Sin schedule definido
+### expire-suggestions — Diario 03:00 UTC (22:00 COT)
 
 **Query (via repo):** `CheckInSuggestion.updateMany({ status: PENDING, expiresAt: { lt: now } }, { status: EXPIRED })`
 
@@ -200,7 +200,7 @@ tags: [medaliq, spec, plataforma]
 |--------|-----------|--------------------|
 | Los crons estan activos | Funcionan | DESACTIVADOS — `vercel.json` no tiene entradas cron (ahorrar Neon compute) |
 | `billing-check` solo acepta POST | Falla con Vercel cron | Exporta GET + POST desde 2026-10-07 — compatible con Vercel cron |
-| `expire-suggestions` tiene schedule | Configurado | NO tiene schedule en ningun lugar — ni comentario ni vercel.json |
+| `expire-suggestions` sin schedule documentado | Faltaba en resumen | Schedule Diario 03:00 UTC — estaba definido en bloque "Para reactivar" pero no en la tabla resumen ni en el header del cron |
 | `inactive-athlete-reminder` no repite | Tiene dedup | SIN cooldown — notifica al mismo atleta cada dia |
 | `payment-overdue` marca pagos como OVERDUE | Cambia status | Status sigue PENDING — OVERDUE es derivado, no almacenado |
 
@@ -235,5 +235,6 @@ Agregar a `vercel.json`:
 | Fecha | Cambio | Referencia |
 |-------|--------|-----------|
 | 2026-10-07 | billing-check exporta GET+POST (compatible Vercel cron). Crons temporalmente activados y luego desactivados para ahorrar Neon compute. Estado final: DESACTIVADOS. |
+| 2026-11-02 | expire-suggestions: schedule asignado Diario 03:00 UTC (ya estaba en bloque reactivar, faltaba en tabla/header). TL;DR corregido (billing-check usa GET+POST no solo POST). | Auditoria de specs |
 | 2026-10-05 | Fix: TL;DR corregido de 5 a 10 crons, eliminados plan-lifecycle y strava-sync inexistentes |
 | 2026-09-29 | Spec creada | Extraida del codigo por agentes SDD |

@@ -104,6 +104,12 @@ DELETE verifica `template.userId === session.userId`.
 
 **POST apply (mobile)**: `{ weekStart, intensityMap }` — mobile envia el intensityMap directamente. Misma logica de delete+createMany.
 
+**Response apply (ambos)**:
+```ts
+{ ok: true, created: number, weekStart: string }
+// created = numero de PlannedMeals creados tras el deleteMany+createMany
+```
+
 ---
 
 ## Modelos DB

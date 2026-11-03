@@ -222,13 +222,12 @@ thighsCm?:       number  min(20) max(120)
 2a. Si `plan.source === 'COACH'` y hay triggers: `generateSuggestions(...)` -> `suggRepo.createMany(...)` (NO auto-aplica)
 2b. Si `assignedWorkout` y triggers `dolor_activo` o `rpe_excesivo`: actualiza `WorkoutDay.warmupNotes` con prefijo `[AUTO]`.
 
-> **[roadmap R4] PENDIENTE DE ELIMINAR.** Check-in = recopilación de datos solamente. La auto-modificación de `warmupNotes` será eliminada.
+> **[R4 COMPLETADO]** `applySessionAdjustments` y auto-modificación de `warmupNotes` eliminados del flujo de check-in. La función sigue exportada solo para accept-suggestion.
 3. Si `data.weight`: `syncWeight(...)` — ver detalle abajo.
 
-> **[roadmap R3] PENDIENTE DE ELIMINAR recálculo.** La decisión de producto es que syncWeight solo guarda peso en HealthProfile.weightKg. El código actual TODAVÍA recalcula TDEE/macros — esto es código zombie que será eliminado en R3.
+> **[R3 COMPLETADO]** `syncWeight()` solo actualiza `HealthProfile.weightKg`. Sin recálculo de TDEE/macros.
 
-**Comportamiento activo (código zombie):** `syncWeight()` detecta |Δkg| >= 0.3 → actualiza `HealthProfile.weightKg` Y recalcula `NutritionPlan` (TDEE, macros, targets por dayType).
-**Comportamiento objetivo (post-R3):** `syncWeight()` solo actualiza `HealthProfile.weightKg`. Sin recálculo de NutritionPlan.
+**Comportamiento actual:** `syncWeight()` detecta |Δkg| >= 0.5 (`WEIGHT_DELTA_MIN`) → actualiza solo `HealthProfile.weightKg`. Compara vs peso del perfil (no vs check-in anterior — BUG-055 resuelto).
 3b. Si `data.heartRate > 0`: `healthProfileRepo.updateHrResting(userId, heartRate)`
 4. Si es primer check-in (count=1): `userRepo.enableFeature(userId, 'progress')`
 
@@ -263,9 +262,7 @@ thighsCm?:       number  min(20) max(120)
 
 ### applySessionAdjustments (exportado)
 
-> **[roadmap R4] PENDIENTE DE ELIMINAR.** Check-in = recopilación de datos solamente. `applySessionAdjustments` será eliminado.
-
-Usada tambien por los endpoints de accept sugerencia.
+> **[R4 COMPLETADO]** Eliminado del flujo de check-in. Exportado solo para los endpoints de accept-suggestion (`/checkin/suggestions/[id]/accept`).
 
 **Reglas de skip**: sesiones con `coachNotes` (DB: `coachNote` singular — el repositorio mapea `coachNote` → `coachNotes`) que NO contienen `[AUTO]` -> se saltan (editadas manualmente por el coach).
 

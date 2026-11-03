@@ -551,7 +551,7 @@ Sincroniza catalogo desde fuente externa controlada por `EXERCISE_SOURCE` env:
 - `assignedWorkoutId` — FK nullable a AssignedWorkout
 - `plannedSessionId` — FK nullable a PlannedSession
 - **Constraint DB:** `(assignedWorkoutId IS NULL OR plannedSessionId IS NULL)` — una sesion es de rutina O de plan, nunca ambos.
-- `dayOfWeek` — 0–6 (formato JS, no 1–7)
+- `dayOfWeek` — 1–7 (1=Lun, 7=Dom) — convención canónica del sistema (ver T26)
 - `date` — Date (local del atleta, calculada con `todayInTz(timezone)`)
 - `energyState` — enum `EXHAUSTED | NORMAL | ENERGIZED | null`
 - `discomfort` — enum `NONE | MILD | MODERATE | null`

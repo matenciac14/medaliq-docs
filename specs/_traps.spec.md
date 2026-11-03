@@ -5,7 +5,7 @@ tags: [medaliq, spec, traps]
 # Trampas transversales — LEE ESTO ANTES DE TOCAR CUALQUIER MODULO
 
 > Estas son decisiones de implementacion que NO son obvias y que la AI rompe sistematicamente.
-> Cada trampa fue verificada contra el codigo real. Ultima actualizacion: 2026-09-29.
+> Cada trampa fue verificada contra el codigo real. Ultima actualizacion: 2026-11-02.
 
 ---
 
@@ -22,16 +22,14 @@ tags: [medaliq, spec, traps]
 
 ---
 
-## T02 — [AUTO] en coachNote
-
-> **[roadmap R4] PENDIENTE DE ELIMINAR.** La decisión de producto es que check-in = recopilación de datos solamente. `applySessionAdjustments` será eliminado. Mientras exista, este es el comportamiento activo:
+## T02 — [AUTO] en coachNote (R4 COMPLETADO — solo en accept-suggestion)
 
 **Que parece:** `PlannedSession.coachNote` es un campo de texto libre.
-**Que es realmente:** Si `coachNote` NO empieza con `[AUTO]` o esta vacio, el sistema de check-in NUNCA modifica esa sesion automaticamente. Es la senal de que el coach escribio una nota manual.
+**Que es realmente:** [R4 COMPLETADO] `applySessionAdjustments` fue eliminado del flujo de check-in. El check-in es recopilación de datos solamente. La función sigue exportada solo para los endpoints de **accept suggestion** (`/checkin/suggestions/[id]/accept`), donde el atleta/coach decide explícitamente aceptar un ajuste.
 
-**Regla:** Cualquier codigo que escriba `coachNote` automaticamente DEBE preponer `[AUTO]`. Sin el prefijo, la sesion queda "bloqueada" contra ajustes del check-in.
+**Regla sobre coachNote:** Si `coachNote` NO empieza con `[AUTO]` o esta vacio, el sistema NUNCA modifica esa sesion. Es la señal de que el coach escribió una nota manual. Código que escriba `coachNote` automáticamente DEBE preponer `[AUTO]`.
 
-**Archivo:** `src/domain/checkin/process_check_in.use_case.ts` — busca `applySessionAdjustments`.
+**Archivo:** `src/domain/checkin/process_check_in.use_case.ts` — `applySessionAdjustments` solo en accept-suggestion path.
 
 ---
 
@@ -191,17 +189,14 @@ Glob: src/app/api/athlete/**/route.ts (buscar equivalente web)
 
 ---
 
-## T16 — syncWeight recalcula TDEE/macros (roadmap R3)
+## T16 — syncWeight solo guarda peso (R3 COMPLETADO)
 
-> **[roadmap R3] PENDIENTE DE ELIMINAR.** La decisión de producto es que syncWeight solo guarda peso en HealthProfile.weightKg. El recálculo de TDEE/macros será eliminado.
+**Que parece:** `syncWeight()` recalcula TDEE y macros cuando el atleta reporta cambio de peso.
+**Que es realmente:** [R3 COMPLETADO] `syncWeight()` solo actualiza `HealthProfile.weightKg`. No recalcula TDEE ni macros. El umbral es `|Δkg| >= 0.5` (`WEIGHT_DELTA_MIN` en `check_in.types.ts`).
 
-**Comportamiento actual (código activo):**
-`process_check_in.use_case.ts` → `syncWeight()` detecta |Δkg| >= 0.3 → actualiza `HealthProfile.weightKg` Y recalcula `NutritionPlan` (TDEE, macros, targets por dayType).
+**Regla:** NO agregar recálculo de TDEE/macros en syncWeight — fue eliminado intencionalmente. Si ves código de cálculo TDEE/macros cerca de syncWeight, es dead code pendiente de limpieza.
 
-**Comportamiento objetivo (post-R3):**
-`syncWeight()` solo actualiza `HealthProfile.weightKg`. Sin recálculo de NutritionPlan.
-
-**Riesgo:** si alguien toca el check-in y ve la lógica de peso, puede asumir que el recálculo es intencional. NO lo es — es código zombie pendiente de eliminar.
+**Archivo:** `src/domain/checkin/process_check_in.use_case.ts` — busca `syncWeight`.
 
 ---
 
@@ -283,3 +278,19 @@ Glob: src/app/api/athlete/**/route.ts (buscar equivalente web)
 **Que es realmente:** Si el estado `builderError` no tiene un elemento JSX que lo renderice, el error se setea pero el usuario nunca lo ve. Error silencioso.
 
 **Regla:** Todo estado de error (`builderError`, `error`, etc.) DEBE tener su elemento de renderizado correspondiente en el JSX del componente.
+
+---
+
+## T26 — dayOfWeek: convencion canonica 1-7
+
+**Que parece:** `dayOfWeek` podria usar la convencion JS (0=Dom) en alguna parte.
+**Que es realmente:** El estandar del sistema es **1-7 (1=Lunes, 7=Domingo)** en TODOS los modelos y endpoints. No hay excepciones.
+
+**Fuentes canónicas:**
+- `WorkoutDay.dayOfWeek`: 1-7 (Zod `min(1).max(7)` en `coach/gym/routines`)
+- `PlannedSession.dayOfWeek`: 1-7 (todas las rutas, incluyendo from-template — corregido 2026-11-02)
+- `GymSession.dayOfWeek`: 1-7 (Zod `min(1).max(7)` en `gym_session.schemas.ts`)
+- `toDayOfWeek()` en `coach/athletes/[id]/sessions/route.ts`: convierte JS `getUTCDay()` (0=Dom) a 1-7
+- `from-template`: usa `dayOffset = dayOfWeek - 1` para calcular fecha, almacena `dayOfWeek` original (1-7)
+
+**Regla:** Siempre usar 1-7 (1=Lunes, 7=Domingo). Para calcular fecha desde weekStart: `weekStart + (dayOfWeek - 1) dias`.

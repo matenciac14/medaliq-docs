@@ -123,10 +123,11 @@ Coach abre perfil del atleta → Tab Plan → Vista calendario
   → POST /api/coach/athletes/[id]/sessions (ARCH-03 implementado)
       Crea PlannedSession con fecha específica en el calendario del atleta
 
-[pendiente] Post-tx notificación:
-  → El endpoint NO envía notificación push al atleta actualmente
+[pendiente — P3, post-lanzamiento] Post-tx notificación:
+  → El endpoint `POST /api/coach/athletes/[id]/sessions` NO envía notificación push al atleta actualmente
   → Debe agregar: Notification { type: 'PLAN_ACTUALIZADO' } + push si tiene token
-  → Patrón existe en celebrate-pr y status — copiar approach
+  → Patrón existe en `PATCH /api/coach/sessions/[id]/edit` (fire-and-forget via `createNotification()`) — copiar approach
+  → No bloquea MVP: el atleta ve la sesión al abrir el calendario. La notificación es cortesía
 
 Atleta mobile:
   → Abre el calendario → ve la sesión del día con todos los detalles

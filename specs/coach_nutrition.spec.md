@@ -44,8 +44,8 @@ tags: [medaliq, spec, nutricion, coach]
 | Metodo | Path | Auth | Rate limit | Descripcion |
 |--------|------|------|------------|-------------|
 | GET | `/api/coach/athletes/[id]/nutrition` | `auth()` COACH | 300/min | Dashboard nutricional del atleta |
-| PATCH | `/api/coach/athletes/[id]/nutrition` | `auth()` COACH | 60/min | Upsert NutritionPlan targets directos (sin Zod, source COACH) |
-| PATCH | `/api/coach/athletes/[id]/nutrition/targets` | `auth()` COACH | 60/min | Update targets con Zod + recalculo TDEE/macros |
+| PATCH | `/api/coach/athletes/[id]/nutrition` | `auth()` COACH | 60/min | **Seteo directo**: upsert de macros sin Zod, sin recalculo. Uso: coach asigna targets manualmente |
+| PATCH | `/api/coach/athletes/[id]/nutrition/targets` | `auth()` COACH | 60/min | **Ajuste inteligente**: update con Zod + recalculo TDEE/macros/fatG residual. Uso: coach ajusta con kcalAdjustment |
 | GET | `/api/coach/athletes/[id]/nutrition/plan` | `auth()` COACH | 300/min | Meals de una semana (?week=YYYY-MM-DD) |
 | POST | `/api/coach/athletes/[id]/nutrition/plan` | `auth()` COACH | 60/min | Crear PlannedMeal para atleta |
 | DELETE | `/api/coach/athletes/[id]/nutrition/plan/[mealId]` | `auth()` COACH | 60/min | Borrar PlannedMeal |
@@ -102,7 +102,10 @@ tags: [medaliq, spec, nutricion, coach]
 
 ---
 
-### `PATCH /api/coach/athletes/[id]/nutrition`
+### `PATCH /api/coach/athletes/[id]/nutrition` — Seteo directo
+
+> **Cuándo usar**: coach define targets manualmente (ej: "quiero que coma 2500 kcal en dia duro"). No recalcula nada.
+> **Diferencia con `/targets`**: este es un upsert crudo sin Zod. `/targets` tiene validación estricta y recalcula TDEE/macros/fatG.
 
 **Request:**
 ```ts
@@ -133,7 +136,10 @@ tags: [medaliq, spec, nutricion, coach]
 
 ---
 
-### `PATCH /api/coach/athletes/[id]/nutrition/targets`
+### `PATCH /api/coach/athletes/[id]/nutrition/targets` — Ajuste inteligente
+
+> **Cuándo usar**: coach quiere ajustar con recálculo automático (ej: "sube 200 kcal" via kcalAdjustment, o "cambia proteina a 180g" y el sistema recalcula fatG residual).
+> **Diferencia con `/nutrition`**: este valida con Zod, recalcula TDEE/macros via fórmulas, y calcula fatG como macro residual.
 
 **Request:**
 ```ts
@@ -149,6 +155,8 @@ tags: [medaliq, spec, nutricion, coach]
 
 **Response:**
 ```ts
+// NOTA: response NO incluye carbsHardG/carbsEasyG/fatG — el select de Prisma los excluye intencionalmente.
+// El cliente infiere fatG de la formula (kcal - protein*4 - carbs*4) / 9. Carbs no cambian en este endpoint.
 { targetKcalHard: number, targetKcalEasy: number, targetKcalRest: number, proteinG: number, kcalAdjustment: number | null, source: string }
 ```
 
@@ -806,3 +814,4 @@ El atleta interactua con los resultados (ver propuestas, aceptar/rechazar, ver p
 | 2026-10-02 | Reescritura completa con 20 endpoints, modelos completos, reglas R01-R07, trampas detalladas, tests exhaustivos | Requisitos de diseno |
 | 2026-10-05 | Fix body schemas: PATCH /nutrition usa tdee/targetKcalHard/Easy/Rest/proteinG/carbsHardG/carbsEasyG/fatG; PATCH /targets usa targetKcalHard/Easy/Rest/proteinG/kcalAdjustment; POST /meals usa dayType+grams; apply-template usa weekStartDate; POST /plan usa date+grams. Rate limits documentados en todos los endpoints. Modelos DB corregidos (NutritionPlan, NutritionTemplateFoodItem, PlannedMeal, AssignedNutritionPlan, MealPlan). Response wrappers corregidos. | Auditoria vs codigo real |
 | 2026-10-09 | Auditoria pre-prod: NutritionBuilder builderError renderizado obligatorio, activeDay fallback safety, templates PATCH/POST req.json().catch | 8 rondas de auditoria |
+| 2026-11-02 | Clarificación PATCH /nutrition vs /targets: uso-case guidance, nota response /targets sin carbs/fatG (intencional) | Auditoria de specs |

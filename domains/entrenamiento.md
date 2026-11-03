@@ -49,7 +49,7 @@ Entrenamiento (bibliotecas + registro)
 
 ## Convención dayOfWeek — base-1
 
-En todo el sistema, `dayOfWeek` usa convención base-1: **1 = Lunes, 7 = Domingo**. Esta convención aplica en rutinas, sesiones planificadas y respuestas de API. La validación rechaza valores menores a 1. Internamente, `GymSession.dayOfWeek` almacena formato JavaScript nativo (0-6), pero se convierte a base-1 en las respuestas de la API para mantener consistencia.
+En todo el sistema, `dayOfWeek` usa convención base-1: **1 = Lunes, 7 = Domingo**. Esta convención aplica en TODOS los modelos y endpoints sin excepción: `WorkoutDay`, `PlannedSession`, `GymSession`. La validación Zod rechaza valores fuera de 1-7 (`min(1).max(7)`). Ver T26 en `_traps.spec.md`.
 
 ---
 

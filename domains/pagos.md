@@ -224,7 +224,7 @@ Cron POST /api/cron/billing-check  [diario, 2am UTC / 9pm COT]
     ATHLETE → downgradeAthlete(userId) → tier='FREE', featurePlan/Checkin/Progress=false
 
 Nota: los atletas del coach NO se desactivan. El coach los conserva, solo pierde
-el acceso a gestionar más de 5 atletas hasta que renueve.
+el acceso a gestionar más de 2 atletas (límite STARTER) hasta que renueve.
 ```
 
 **Timeline de un ciclo completo:**
@@ -254,7 +254,7 @@ WOMPI_PRIVATE_KEY=prv_test_...        # llave privada del ambiente de pruebas
 WOMPI_INTEGRITY_SECRET=test_integrity_...  # integrity secret del sandbox
 ```
 
-### Crons (ya configurados en vercel.json)
+### Crons (DESACTIVADOS en vercel.json — código listo, activar con billing live)
 
 ```bash
 CRON_SECRET=...    # cualquier string seguro — header Authorization: Bearer <CRON_SECRET>

@@ -73,7 +73,7 @@ Historial completo desde la fecha de suscripcion. Si baja a Free, pierde acceso 
 
 ## Atleta B2B — diferencias sobre Pro
 
-Features: las que el coach activó vía `PATCH /api/coach/athletes/[id]/config`. $0 — incluido en tier del coach.
+Features: activadas cuando el coach activa al atleta vía `PATCH /api/coach/athletes/[id]/status` `{ status: 'ACTIVE' }`. $0 — incluido en tier del coach.
 Sin activar → `/pending`. Ver `flujos-cruzados.md §Flujo 4`.
 
 **Si la relacion de coaching termina** (coach pausa o desvincula al atleta), el atleta **revierte a B2C** con las features de su tier personal (Free o Pro). No pierde su cuenta ni su historial — solo pierde la capa del coach.
@@ -100,7 +100,7 @@ Tiers, pricing y definición de atleta activo: ver `pagos.md`.
 |--------|----------|-------------|
 | Crear atleta nuevo | `POST /api/coach/clients/create` | 402 si `activeCount >= maxAthletes` del tier |
 | Vincular atleta B2C existente | `POST /api/coach/clients/link` | — |
-| Listar / ver perfil de atleta | `GET /api/coach/clients` · `/api/coach/athletes/[id]` | Solo los propios — verificar `CoachAthlete.status = 'ACTIVE'` |
+| Listar atletas / ver datos del atleta | `GET /api/coach/clients` · sub-rutas `/api/coach/athletes/[id]/*` | Solo los propios — verificar `CoachAthlete.status = 'ACTIVE'`. No existe endpoint standalone `GET /athletes/[id]` — datos via sub-rutas (`/nutrition`, `/training-adherence`, etc.) |
 | Activar atleta (todas las features PRO) | `PATCH /api/coach/athletes/[id]/status` `{ status: 'ACTIVE' }` | Activa todas las features automáticamente — no hay toggles individuales. B2B activo = PRO |
 | Configurar notas / objetivo del atleta | `PATCH /api/coach/athletes/[id]/config` | Solo `coachGoal` y `privateNotes` — NO toca features |
 | Pausar atleta | `PATCH /api/coach/athletes/[id]/status` `{ status: 'PAUSED' }` | Revierte features a B2C Free automáticamente. Ocurre también cuando se vence el plan (fecha de corte) |
@@ -135,7 +135,7 @@ El coach diseña planes y rutinas según su especialidad. Un plan puede combinar
 | Acción | Endpoint | Restricción |
 |--------|----------|-------------|
 | [roadmap] Ver check-ins del atleta | `GET /api/coach/athletes/[id]/checkins` | Endpoint no existe — coach ve datos indirectos via dailylogs y training-adherence |
-| Ver adherencia al plan | `GET /api/coach/athletes/[id]/adherence` | % sesiones completadas vs planeadas |
+| Ver adherencia al plan | `GET /api/coach/athletes/[id]/training-adherence` | % sesiones completadas vs planeadas |
 | Ver benchmarks del atleta | `GET /api/coach/athletes/[id]/benchmarks` | Implementado — coach ve benchmarks del atleta |
 | Registrar sesión / check-in por el atleta | ❌ | NUNCA — el atleta registra sus propios datos |
 
@@ -204,7 +204,7 @@ Acceso exclusivo `role = 'ADMIN'`. Ver reglas en `plataforma.md`.
 | `checkin-reminder` | Dom 23:00 UTC | Recuerda a atletas que no hicieron check-in esta semana |
 | `payment-overdue` | Diario 14:00 UTC | Notifica pagos vencidos coach→atleta |
 | `pending-athlete-reminder` | Diario 12:00 UTC | Recuerda a coaches atletas que no completaron onboarding |
-| `expire-suggestions` | Sin schedule definido | Expira `CheckInSuggestion` viejas |
+| `expire-suggestions` | Diario 03:00 UTC | Expira `CheckInSuggestion` viejas |
 | `billing-check` | Diario 02:00 UTC | Verifica estado de suscripciones (grace period=3 días, downgrade si vence) |
 | `billing-renewal-reminder` | Diario 13:00 UTC | Envía email con nuevo link de pago Wompi a suscripciones que vencen en 7 días |
 | `inactive-athlete-reminder` | Diario 14:00 UTC | Alerta al **atleta** (push + email re-engagement) si lleva 3+ días sin actividad |
