@@ -69,17 +69,18 @@ Este patrón es consistente con los ajustes de entrenamiento — el coach propon
 
 **El plan base NUNCA se modifica automáticamente.** Solo el coach lo cambia, y solo con aceptación del atleta.
 
-## Sincronización plan-nutrición (fuente canónica: `daily_target.ts`)
+## Sincronización plan-nutrición
 
+**[R5 COMPLETADO]**: el sistema ya NO auto-modifica targets nutricionales por intensidad de sesión. El target diario es fijo (MODERATE/easy) según el NutritionPlan configurado en onboarding o por el coach. La función `intensityToDayType` existe pero los consumers usan MODERATE hardcodeado.
+
+**Mapeo legacy (dead code — no usar en código nuevo):**
 ```
-PlannedSession.intensity → kcal + macros del día
 HIGH     → targetKcalHard + carbsHardG
 MODERATE → targetKcalEasy + carbsEasyG
 LOW      → targetKcalEasy × 0.88 + carbsEasyG × 0.75
-REST     → targetKcalRest + carbsEasyG × 0.7   ← default/fallback para null/undefined intensity
+REST     → targetKcalRest + carbsEasyG × 0.7
 ```
-
-**[R5 COMPLETADO]**: el sistema ya NO auto-modifica targets nutricionales por intensidad de sesion. El target diario es fijo (MODERATE/easy) segun el NutritionPlan configurado en onboarding o por el coach. La funcion `intensityToDayType` existe pero los consumers usan MODERATE hardcodeado.
+Este mapeo está en `daily_target.ts` pero no se ejecuta en producción — todos los consumers pasan MODERATE.
 
 ## PendingNutritionAdjustment
 

@@ -19,7 +19,7 @@ tags: [medaliq, spec, plan, entrenamiento, coach]
 - 17 endpoints (17 web, 0 mobile)
 - Modelos: TrainingPlan, PlanWeek, PlannedSession, SessionTemplate
 - Dependencias: `generatePlanUseCase()`, `getSessionIntensity()`, `forceMonday()`
-- Trampas criticas: `dayOfWeek - 1` en from-template (base-0 vs base-1), PATCH/DELETE comparten ruta, copy-prev es destructivo, sin Zod en mayoria de endpoints
+- Trampas criticas: from-template usa PLAN_TEMPLATES (no WorkoutTemplate), PATCH/DELETE comparten ruta, copy-prev es destructivo, sin Zod en mayoria de endpoints
 - Mirror mobile: ninguno — plan es web-only
 
 ---
@@ -28,7 +28,7 @@ tags: [medaliq, spec, plan, entrenamiento, coach]
 
 <!-- Lo que la AI DEBE saber antes de tocar este modulo. Si no lees esto, alucinaras. -->
 
-- [ ] `from-template` convierte `dayOfWeek + 1` (base-0 a base-1) al crear sesiones. El resto de endpoints usan base-1 directamente (1=lunes, 7=domingo).
+- [x] `from-template` usa `dayOffset = s.dayOfWeek - 1` para calcular fecha, pero almacena `s.dayOfWeek` (1-7) en DB. Corregido 2026-11-02 — antes almacenaba 0-6.
 - [ ] Crear un plan SIEMPRE desactiva todos los planes activos del atleta (`updateMany COMPLETED`) en la misma transaccion.
 - [ ] PATCH y DELETE de sesiones comparten la misma ruta: `/api/coach/sessions/[sessionId]/edit` — el metodo HTTP diferencia la operacion.
 - [ ] `copy-prev` es destructivo: borra TODAS las sesiones de la semana destino antes de copiar.
@@ -47,7 +47,7 @@ tags: [medaliq, spec, plan, entrenamiento, coach]
 |--------|------|------|------------|-------------|
 | POST | `/api/coach/athletes/[id]/plan` | `auth()` COACH | ninguno | Generar plan desde template predefinido |
 | POST | `/api/coach/athletes/[id]/plan/custom` | `auth()` COACH | ninguno | Crear plan vacio custom |
-| POST | `/api/coach/athletes/[id]/plan/from-template` | `auth()` COACH | ninguno | Crear plan desde WorkoutTemplate con sesiones |
+| POST | `/api/coach/athletes/[id]/plan/from-template` | `auth()` COACH | ninguno | Crear plan desde PLAN_TEMPLATES predefinido (running/deporte) |
 | POST | `/api/coach/athletes/[id]/plan/copy-from` | `auth()` COACH | ninguno | Copiar plan completo de otro atleta |
 | POST | `/api/coach/athletes/[id]/sessions` | `auth()` COACH | ninguno | Crear sesion en plan activo (busca semana por fecha) |
 | POST | `/api/coach/plan/[planId]/sessions` | `auth()` COACH | ninguno | Crear sesion por planId + weekId explicito |
@@ -133,34 +133,33 @@ Semana 13-14: AFINAMIENTO
 
 ### POST /api/coach/athletes/[id]/plan/from-template
 
-Crea un plan con sesiones pre-cargadas desde un WorkoutTemplate (rutina gym del coach).
+Crea un plan con sesiones pre-cargadas desde un **plan template predefinido** del sistema (`PLAN_TEMPLATES` en `domain/plan/templates.ts`). Son templates de running/multideporte, NO rutinas gym.
 
 **Auth:** verifica ownership del atleta.
 
 **Request body:**
 ```ts
 {
-  templateId: string  // id del WorkoutTemplate
+  templateId: string  // clave de PLAN_TEMPLATES (ej: 'beginner-5k', 'intermediate-10k')
   name: string
-  startDate: string   // se fuerza a lunes
+  startDate: string   // se fuerza a lunes con forceMonday()
 }
 ```
 
-**TRAMPA CRITICA — dayOfWeek base-0 a base-1:**
+**dayOfWeek — almacenado como base-1 (corregido 2026-11-02):**
 ```ts
-// WorkoutDay.dayOfWeek viene en base-0 (0=lunes) del modelo de rutina gym
-// PlannedSession.dayOfWeek usa base-1 (1=lunes, 7=domingo)
-// Conversion: dayOfWeek: workoutDay.dayOfWeek + 1
+// PLAN_TEMPLATES usa dayOfWeek 1-7 (1=lunes)
+// El use case usa dayOffset = s.dayOfWeek - 1 para calculo de fecha
+// Almacena s.dayOfWeek (1-7) en PlannedSession.dayOfWeek — consistente con el resto del sistema
 ```
-Esta es la UNICA ruta que hace esta conversion. El resto de endpoints asume que el valor recibido ya esta en base-1.
 
 **Transaccion (timeout: 30s):**
-1. Verifica que el template pertenezca al coach: `workoutTemplate.findFirst({ where: { id: templateId, coachId } })` → 404 si no.
+1. Busca template predefinido via `getTemplate(templateId)` → 400 si no existe.
 2. `updateMany` planes activos del atleta → `status: 'COMPLETED'`
-3. `create` TrainingPlan con semanas y sesiones derivadas de los dias del template.
-4. Cada `WorkoutDay` del template se convierte en una `PlannedSession` con `type: 'FUERZA'` y `workoutDayId` enlazado.
+3. `create` TrainingPlan con semanas y sesiones derivadas del template.
+4. Sesiones creadas con tipo del template (RODAJE_Z2, TEMPO, etc.), `workoutDayId: null` (no es gym).
 
-**Respuesta:** `{ planId: string }`
+**Respuesta:** `{ planId: string, plan: TrainingPlan (con weeks y sessions) }`
 
 ---
 
@@ -233,10 +232,10 @@ Crea una sesion especificando planId y weekId explicitamente. No busca por fecha
 **Request body (sin Zod — validacion manual):**
 ```ts
 {
-  weekId: string
-  dayOfWeek: number     // 1-7
-  type: string          // SessionType
-  durationMin: number
+  weekId: string        // requerido
+  dayOfWeek: number     // requerido, 1-7 (1=Lunes, 7=Domingo)
+  type: string          // requerido, SessionType
+  durationMin: number   // requerido
   distanceKm?: number
   zoneTarget?: number
   detailText?: string
@@ -245,9 +244,14 @@ Crea una sesion especificando planId y weekId explicitamente. No busca por fecha
 }
 ```
 
-**Validacion manual adicional:** verifica que `weekId` pertenezca al `planId`: `planWeek.findFirst({ where: { id: weekId, planId } })` → 400 si no.
+**Validacion manual:**
+1. `weekId`, `dayOfWeek`, `type`, `durationMin` deben estar presentes — 400 si falta alguno
+2. `weekId` debe pertenecer al `planId`: `planWeek.findFirst({ where: { id: weekId, planId } })` → 400 si no
+3. No hay validacion de rango en `dayOfWeek` ni `durationMin` — valores invalidos se persisten silenciosamente
 
-**Logica:** crea `PlannedSession` con `intensity: getSessionIntensity(type)`.
+**Logica:**
+1. Calcula fecha: `sessionDate = weekStart + (dayOfWeek - 1) dias`
+2. Crea `PlannedSession` con `intensity: getSessionIntensity(type)`, `dayOfWeek` tal cual del body
 
 **Respuesta:** objeto `PlannedSession` completo.
 
@@ -547,8 +551,8 @@ model PlannedSession {
   id           String           @id @default(cuid())
   weekId       String
   dayOfWeek    Int
-  // base-1: 1=lunes, 7=domingo
-  // EXCEPCION: from-template convierte desde base-0 (WorkoutDay.dayOfWeek) sumando +1
+  // base-1: 1=lunes, 7=domingo — convención canónica en todo el sistema (ver T26)
+  // from-template usa dayOffset = dayOfWeek - 1 para calcular fecha, almacena dayOfWeek original (1-7)
   date         DateTime
   type         SessionType
   intensity    SessionIntensity // auto-calculada con getSessionIntensity(type), nunca viene del cliente
@@ -587,9 +591,9 @@ model SessionTemplate {
 
 1. **R01 — Plan activo desactivado en toda creacion:** `updateMany({ where: { userId: athleteId, status: 'ACTIVE' }, data: { status: 'COMPLETED' } })` siempre precede al `create` del nuevo plan, en la misma transaccion. Aplica a los 4 endpoints de creacion de plan.
 
-2. **R02 — dayOfWeek base-1 como estandar:** todos los endpoints almacenan y consumen `PlannedSession.dayOfWeek` en base-1 (1=lunes, 7=domingo). La unica excepcion es `from-template` que recibe `WorkoutDay.dayOfWeek` en base-0 y convierte con `+1`.
+2. **R02 — dayOfWeek base-1 como estandar:** TODOS los endpoints almacenan `PlannedSession.dayOfWeek` en base-1 (1=lunes, 7=domingo). Incluido `from-template` (corregido 2026-11-02).
 
-3. **R03 — from-template convierte base-0 a base-1:** `WorkoutDay.dayOfWeek` en el modelo de rutina gym usa base-0 (0=lunes). `from-template` es el unico endpoint que hace esta conversion.
+3. **R03 — from-template usa PLAN_TEMPLATES, no WorkoutTemplates:** `from-template` crea planes desde templates predefinidos de running/deporte en `domain/plan/templates.ts` (via `getTemplate()`), NO desde rutinas gym del coach (`WorkoutTemplate`).
 
 4. **R04 — workoutDayId exclusivo de FUERZA:** si el tipo de sesion cambia en PATCH a cualquier cosa distinta de `FUERZA`, `workoutDayId` se fuerza a `null` automaticamente.
 
@@ -603,7 +607,7 @@ model SessionTemplate {
 
 9. **R09 — coachNote sin [AUTO] bloquea ajustes automaticos:** una sesion con `coachNote` que no empiece con `[AUTO]` no sera modificada por `applySessionAdjustments` en el check-in. Ver `_traps.spec.md` T02.
 
-> **[roadmap R4] PENDIENTE DE ELIMINAR.** La decisión de producto es que check-in = recopilación de datos solamente. El sistema NUNCA auto-modifica planes. `applySessionAdjustments` será eliminado — ver T02 en `_traps.spec.md`.
+> **[R4 COMPLETADO]** `applySessionAdjustments` eliminado del flujo de check-in. Check-in = recopilación de datos solamente. La función sigue exportada solo para accept-suggestion. Ver T02 en `_traps.spec.md`.
 
 10. **R10 — copy-from sin filtro de status en plan fuente:** el plan origen puede estar en cualquier status (ACTIVE, COMPLETED, PAUSED, ABANDONED). El filtro solo aplica al atleta destino (debe tener relacion ACTIVE con el coach).
 
@@ -613,7 +617,7 @@ model SessionTemplate {
 
 | Trampa | Que parece | Que es realmente |
 |--------|-----------|-----------------|
-| **dayOfWeek en from-template** | El template usa el mismo esquema que el plan | `WorkoutDay.dayOfWeek` es base-0 (0=lunes). Se suma 1 al crear la PlannedSession. Es la unica ruta que hace esto. |
+| **dayOfWeek en from-template** | El template usa el mismo esquema que el plan | `PLAN_TEMPLATES` usa base-1 (1=lunes). El use case usa `dayOffset = dayOfWeek - 1` para calcular la fecha pero almacena `dayOfWeek` original (1-7). Corregido 2026-11-02. |
 | **PATCH/DELETE misma ruta** | Son endpoints separados | `/api/coach/sessions/[sessionId]/edit` maneja ambos metodos HTTP en el mismo archivo de ruta Next.js. |
 | **copy-prev destructivo** | "Copiar" implica que el destino se preserva | El endpoint hace `deleteMany` en la semana destino ANTES del `createMany`. Si el create falla, la semana queda completamente vacia. |
 | **copy-to sin workoutDayId** | Copiar una sesion FUERZA deberia copiar el vinculo a la rutina | `copy-to` omite `workoutDayId` intencionalmente. La sesion copiada queda desvinculada de cualquier rutina gym. |
@@ -645,7 +649,7 @@ Ver `plan.spec.md` para los endpoints de lectura del atleta.
 - [ ] POST plan: desactiva plan activo previo en la misma transaccion
 - [ ] POST plan/custom: startDate se fuerza a lunes (forceMonday)
 - [ ] POST plan/custom: fases asignadas correctamente por numero de semana
-- [ ] POST plan/from-template: dayOfWeek se convierte correctamente (base-0 + 1 = base-1)
+- [x] POST plan/from-template: dayOfWeek se almacena como base-1 (1-7) y fecha se calcula con dayOffset = dayOfWeek - 1
 - [ ] POST plan/from-template: sesiones FUERZA tienen workoutDayId
 - [ ] POST plan/copy-from: nombre del plan es "${name} (copia)"
 - [ ] POST plan/copy-from: puede copiar plan con status COMPLETED (sin filtro de status)
@@ -672,3 +676,4 @@ Ver `plan.spec.md` para los endpoints de lectura del atleta.
 |-------|--------|-----------|
 | 2026-10-01 | Spec stub creada (auditoria P0.3) | Extraida del codigo |
 | 2026-10-02 | Spec completa con 17 endpoints, contratos, trampas, tests | Expansion completa desde descripcion de endpoints |
+| 2026-11-02 | Fix from-template: fuente real es PLAN_TEMPLATES (no WorkoutTemplate). Fix codigo: dayOfWeek ahora almacena 1-7 (antes 0-6). Validacion manual documentada en POST /plan/[planId]/sessions. | Auditoria vs codigo real + fix |

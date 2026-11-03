@@ -14,15 +14,15 @@ tags: [medaliq, spec, nutricion]
 ## TL;DR
 - 16 endpoints (10 web, 6 mobile + assigned-plan exclusivo)
 - Modelos: PlannedMeal, AthleteNutritionOverride, NutritionPlan, FoodProfile, AssignedNutritionPlan
-- Dependencias: getDailyNutritionTarget(), calculateTDEE(), calculateMacros(), intensityToDayType() [roadmap R5] PENDIENTE DE ELIMINAR
-- Trampas criticas: intensityToDayType(null)='easy' [roadmap R5] PENDIENTE DE ELIMINAR, planned-summary TZ hardcodeado Bogota, B2B no puede editar targets
+- Dependencias: getDailyNutritionTarget(), calculateTDEE(), calculateMacros(), intensityToDayType() [R5 COMPLETADO — consumers usan MODERATE hardcodeado]
+- Trampas criticas: intensityToDayType(null)='easy' [R5 COMPLETADO — no se ejecuta en produccion], planned-summary TZ hardcodeado Bogota, B2B no puede editar targets
 - Mirror mobile: planned-meals, food-profile (targets solo web, assigned-plan solo mobile)
 
 ---
 
 ## Contratos de la AI
 
-- `intensityToDayType()` mapea: `HIGH` → `'hard'`, `LOW` → `'low'`, `REST` → `'rest'`, cualquier otra cosa (incluyendo `MODERATE` y `null`) → `'easy'`. CUIDADO: `null` y `MODERATE` producen el mismo `'easy'`. [roadmap R5] PENDIENTE DE ELIMINAR — el target diario no debe variar automaticamente por intensidad de sesion.
+- `intensityToDayType()` mapea: `HIGH` → `'hard'`, `LOW` → `'low'`, `REST` → `'rest'`, cualquier otra cosa (incluyendo `MODERATE` y `null`) → `'easy'`. CUIDADO: `null` y `MODERATE` producen el mismo `'easy'`. [R5 COMPLETADO] La función existe pero los consumers usan MODERATE hardcodeado — el target diario NO varía por intensidad de sesión en producción.
 - Los targets de dia LOW usan multiplicadores fijos: kcal = `targetKcalEasy * 0.88`, carbos = `carbsEasyG * 0.75`. REST usa: carbos = `carbsEasyG * 0.70`.
 - `fatG` siempre se deriva como `(kcal - protein*4 - carbs*4) / 9`, redondeado al entero mas cercano (`Math.round`), nunca negativo.
 - Un atleta con `CoachAthlete.status = 'ACTIVE'` NO puede editar sus `NutritionPlan.targets`. Recibe 403.
@@ -181,7 +181,7 @@ template → NutritionTemplate
 
 | Trampa | Que parece | Que es realmente |
 |--------|-----------|-----------------|
-| `intensityToDayType(null)` | Podria ser 'rest' o null | Retorna `'easy'`. null y MODERATE producen el mismo resultado. [roadmap R5] PENDIENTE DE ELIMINAR |
+| `intensityToDayType(null)` | Podria ser 'rest' o null | Retorna `'easy'`. null y MODERATE producen el mismo resultado. [R5 COMPLETADO] Función existe pero consumers pasan MODERATE hardcodeado — no se ejecuta dinámicamente. |
 | `planned-summary` timezone | Parece que usa timezone del usuario | Hardcodeado a `'America/Bogota'`. |
 
 ---
