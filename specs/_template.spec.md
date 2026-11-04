@@ -26,6 +26,24 @@
 
 ---
 
+## 4 preguntas obligatorias
+
+<!-- GATE: estas 4 preguntas DEBEN estar respondidas antes de implementar. Si falta alguna, la spec no esta lista. -->
+
+**1. Que puede hacer el usuario?**
+<!-- Accion concreta desde la perspectiva del actor (atleta, coach, admin) -->
+
+**2. Que resultado obtiene?**
+<!-- Estado final observable — que ve, que cambia en DB, que notificacion recibe -->
+
+**3. Que debe respetar?**
+<!-- Invariantes, limites, permisos, reglas de negocio que NO se pueden violar -->
+
+**4. Como se demuestra?**
+<!-- Test especifico, comando, o evidencia que prueba que funciona correctamente -->
+
+---
+
 ## Contratos de la AI
 
 <!-- Lo que la AI DEBE saber antes de tocar este modulo. Si no lees esto, alucinaras. -->
